@@ -1,0 +1,10 @@
+[settings]
+DEBUG = true
+ALLOWED_HOSTS = ['*']
+
+[starmap]
+HOURS="18"
+MINUTES="20"
+WIDTH="1500"
+HEIGHT="1500"
+ANGLE="180"

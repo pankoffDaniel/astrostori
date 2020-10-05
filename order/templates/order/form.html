@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{{ message }}
+{#<iframe id="iframe" name="my_iframe" style="display: none"></iframe>#}
+{#<form action="{% url 'get_order' %}" method="post" target="my_iframe">#}
+<form action="{% url 'get_order' %}" method="post">
+{#<form action="http://45.156.26.96:8080/get-starmap/" method="post" name="myForm" id="myForm">#}
+    <label for="date">Дата</label>
+    <input type="date" name="date" id="date" required>
+    <br>
+    <label for="country">Страна</label>
+    <input type="text" name="country" id="country" required>
+    <br>
+    <label for="city">Город</label>
+    <input type="text" name="city" id="city" required>
+    <br>
+    <label for="additional_info">Дополнительная информация</label>
+    <br>
+    <textarea name="additional_info" id="additional_info" cols="30" rows="10"></textarea>
+    <br>
+    <label for="set_logo">Установить логотип astrostori?</label>
+    <input type="checkbox" name="set_logo" id="set_logo">
+    <br>
+    <label for="agreement">Соглашаюсь на сохранение данных</label>
+    <input type="checkbox" name="agreement" id="agreement" required>
+    <br>
+    <input type="submit" value="Скачать">
+</form>
+
+</body>
+</html>
