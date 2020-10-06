@@ -28,3 +28,8 @@ def delete_file_list(directory, file_type):
     for file_name in directory_file_list:
         if file_name.endswith(file_type):
             os.remove(os.path.join(directory, file_name))
+
+
+def get_starmap_catalog_image_upload_path(instance: object, filename: str) -> str:
+    """Возвращает динамический относительный путь к каталогу звездных карт."""
+    return os.path.join('starmap_catalog', instance.title, filename)
