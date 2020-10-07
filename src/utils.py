@@ -1,9 +1,9 @@
 import os
 
 
-def get_correct_date(date: str) -> tuple:
+def get_correct_date(date: str, separate: str) -> tuple:
     """Принимает данные в формате 2020-09-05, но возвращает 2020, 9, 5."""
-    year, month, day = date.split('-')
+    year, month, day = date.split(separate)
     incorrect_date_numbers = ['01', '02', '03', '04', '05', '06', '07', '08', '09']
     if month in incorrect_date_numbers:
         month = month[-1]
@@ -30,6 +30,11 @@ def delete_file_list(directory, file_type):
             os.remove(os.path.join(directory, file_name))
 
 
-def get_starmap_catalog_image_upload_path(instance: object, filename: str) -> str:
-    """Возвращает динамический относительный путь к каталогу звездных карт."""
+def get_starmap_image_upload_path_in_catalog(instance: object, filename: str) -> str:
+    """Возвращает динамический относительный путь к изображению в каталоге звездных карт."""
     return os.path.join('starmap_catalog', instance.title, filename)
+
+
+def get_starmap_image_upload_path_by_id(instance: object) -> str:
+    """Возвращает динамический относительный путь к изображению звездной карты в каталоге ID заказа."""
+    return os.path.join('clients', instance.id)

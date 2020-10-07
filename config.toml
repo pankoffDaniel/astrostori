@@ -1,6 +1,6 @@
 [settings]
-DEBUG = true
-ALLOWED_HOSTS = ['*']
+DEBUG=true
+ALLOWED_HOSTS=['*']
 
 [starmap]
 HOURS="18"
@@ -8,3 +8,9 @@ MINUTES="20"
 WIDTH="1500"
 HEIGHT="1500"
 ANGLE="180"
+
+[smtp]
+EMAIL_HOST="smtp.yandex.ru"
+EMAIL_PORT="465"
+EMAIL_USE_TLS=false
+EMAIL_USE_SSL=true

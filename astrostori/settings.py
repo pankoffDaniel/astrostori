@@ -3,18 +3,20 @@ import toml
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CONFIG_FILE = 'config.toml'
 CONFIG_FILE_DIR = os.path.join(BASE_DIR, CONFIG_FILE)
 CONFIG_DATA = toml.load(CONFIG_FILE_DIR)
 
 # Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+
 SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
+
 DEBUG = CONFIG_DATA['settings']['DEBUG']
 ALLOWED_HOSTS = CONFIG_DATA['settings']['ALLOWED_HOSTS']
 
@@ -63,7 +65,6 @@ WSGI_APPLICATION = 'astrostori.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
     'default': {
@@ -74,7 +75,6 @@ DATABASES = {
 
 
 # Password validation
-# https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -93,7 +93,6 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 # Internationalization
-# https://docs.djangoproject.com/en/3.0/topics/i18n/
 
 LANGUAGE_CODE = 'ru'
 
@@ -107,11 +106,8 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'order/static')]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -120,3 +116,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 REDIS_HOST = os.environ['REDIS_HOST']
 REDIS_PORT = os.environ['REDIS_PORT']
 CELERY_BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
+
+
+# SMTP
+EMAIL_HOST = CONFIG_DATA['smtp']['EMAIL_HOST']
+EMAIL_USE_TLS = CONFIG_DATA['smtp']['EMAIL_USE_TLS']
+EMAIL_USE_SSL = CONFIG_DATA['smtp']['EMAIL_USE_SSL']
+EMAIL_PORT = CONFIG_DATA['smtp']['EMAIL_PORT']
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')

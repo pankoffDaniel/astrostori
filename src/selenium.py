@@ -1,7 +1,3 @@
-import os
-
-from django.conf import settings
-
 from selenium import webdriver
 from selenium.webdriver.support.select import Select
 
@@ -22,7 +18,7 @@ def click_chosen_object_dict(driver: object, object_dict: dict, alternative=Fals
             element_item.click()
 
 
-def get_driver_options() -> object:
+def get_driver_options(image_directory: str) -> object:
     """Настраивает драйвер браузера и возвращает объект настроек."""
     driver_options = webdriver.ChromeOptions()
     driver_options.add_argument("--headless")
@@ -31,7 +27,7 @@ def get_driver_options() -> object:
     driver_options.add_argument('--no-sandbox')
     driver_options.add_argument('--verbose')
     driver_options.add_experimental_option("prefs", {
-        "download.default_directory": os.path.join(settings.BASE_DIR, 'media'),
+        "download.default_directory": image_directory,
         "download.prompt_for_download": False,
         "download.directory_upgrade": True,
         "safebrowsing_for_trusted_sources_enabled": False,
@@ -72,8 +68,8 @@ def download_starmap(driver: object, url: str, hours: str, minutes: str, width: 
     driver.execute_script("arguments[0].click();", download_image)
 
 
-def get_driver() -> object:
+def get_driver(image_directory) -> object:
     """Возвращает драйвер веб-браузера."""
-    driver_options = get_driver_options()
+    driver_options = get_driver_options(image_directory)
     driver = webdriver.Chrome(chrome_options=driver_options, executable_path="/usr/bin/chromedriver")
     return driver
