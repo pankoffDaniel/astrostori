@@ -12,10 +12,11 @@ def set_text_in_input_field(input_field: object, input_text: str):
 def click_chosen_object_dict(driver: object, object_dict: dict, alternative=False):
     """Кликает выбранные объекты."""
     for _, element_item in object_dict.items():
-        if alternative:
-            driver.execute_script("arguments[0].click();", element_item)
-        else:
-            element_item.click()
+        if element_item is not None:
+            if alternative:
+                driver.execute_script("arguments[0].click();", element_item)
+            else:
+                element_item.click()
 
 
 def get_driver_options(image_directory: str) -> object:
@@ -38,20 +39,20 @@ def get_driver_options(image_directory: str) -> object:
     return driver_options
 
 
-def download_starmap(driver: object, url: str, hours: str, minutes: str, width: str, height: str):
+def download_starmap(driver: object, url: str, starmap_shade_galaxy: bool, hours: str, minutes: str, width: str, height: str):
     """Скачивает изображение звездного неба."""
     driver.get(url)
     width_input_field = driver.find_element_by_css_selector('.pl-export-x')
     height_input_field = driver.find_element_by_css_selector('.pl-export-y')
     set_text_in_input_field(width_input_field, width)
     set_text_in_input_field(height_input_field, height)
-
     object_dict = {
         'hide_deep_sky': driver.find_element_by_css_selector('.chksn'),
         'hide_planets': driver.find_element_by_css_selector('.chksp'),
         'hide_planets_label': driver.find_element_by_css_selector('.chklp'),
         'hide_constellations_names': driver.find_element_by_css_selector('.chkcn'),
         'hide_daylight': driver.find_element_by_css_selector('.chkdaylig'),
+        'show_shade_galaxy': driver.find_element_by_css_selector('.chkgalash') if starmap_shade_galaxy else None,
     }
     click_chosen_object_dict(driver, object_dict)
 

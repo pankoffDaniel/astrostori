@@ -9,21 +9,21 @@ from src.utils import rotate_svg_image, delete_file_list
 
 
 @app.task()
-def get_starmap_task(starmap_url: str, hours: str, minutes: str, width: str, height: str, angle: str,
-                     image_name: str, client_order_id: str, force_download=False):
+def get_starmap_task(starmap_url: str, starmap_shade_galaxy: bool, hours: str, minutes: str, width: str, height: str, angle: str,
+                     starmap_filename: str, client_order_id: str, force_download=False):
     """Ассинхронное выполнение для получения звездной карты и поворота на 180 градусов."""
     image_directory = os.path.join(settings.BASE_DIR, 'media', 'clients', client_order_id)
     driver = get_driver(image_directory)
     os.makedirs(image_directory, exist_ok=True)
-    image_path = os.path.join(image_directory, image_name)
+    image_path = os.path.join(image_directory, starmap_filename)
     flag_downloaded_starmap = False
-    while force_download or image_name not in os.listdir(image_directory):
+    while force_download or starmap_filename not in os.listdir(image_directory):
         # Перезаписывается файл, если он существует
         try:
-            os.remove(os.path.join(image_directory, image_name))
+            os.remove(os.path.join(image_directory, starmap_filename))
         except FileNotFoundError:
             pass
-        download_starmap(driver, starmap_url, hours, minutes, width, height)
+        download_starmap(driver, starmap_url, starmap_shade_galaxy, hours, minutes, width, height)
         flag_downloaded_starmap = True
         force_download = False
     driver.close()

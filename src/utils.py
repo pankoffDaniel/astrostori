@@ -1,5 +1,8 @@
 import os
 
+import toml
+from django.conf import settings
+
 
 def get_correct_date(date: str, separate: str) -> tuple:
     """Принимает данные в формате 2020-09-05, но возвращает 2020, 9, 5."""
@@ -35,6 +38,11 @@ def get_starmap_image_upload_path_in_catalog(instance: object, filename: str) ->
     return os.path.join('starmap_catalog', instance.title, filename)
 
 
-def get_starmap_image_upload_path_by_id(instance: object) -> str:
-    """Возвращает динамический относительный путь к изображению звездной карты в каталоге ID заказа."""
-    return os.path.join('clients', instance.id)
+def load_config_file():
+    try:
+        config_data = toml.load(settings.CONFIG_FILE_DIR)
+        return config_data
+    except FileNotFoundError:
+        raise Exception(
+            f'Конфигурационный файл {settings.CONFIG_FILE} не найден.'
+            f'Файл должен находиться по пути {settings.BASE_DIR}/{settings.CONFIG_FILE}')

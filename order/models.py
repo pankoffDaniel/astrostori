@@ -3,10 +3,23 @@ from django.db import models
 from src import utils
 
 
+class StarmapSizeModel(models.Model):
+    """Модель размера звездной карты в формате 30x50 (ширина|высота)."""
+    size = models.CharField('Размер звездной карты', max_length=255)
+
+    def __str__(self):
+        return self.size
+
+    class Meta:
+        verbose_name = 'Размер звездной карты'
+        verbose_name_plural = 'Размер звездных карт'
+
+
 class StarmapModel(models.Model):
     """Модель шаблона заказа звездной карты."""
     title = models.CharField('Название звездной карты', max_length=255)
     image = models.ImageField('Изображение', upload_to=utils.get_starmap_image_upload_path_in_catalog)
+    shade_galaxy = models.BooleanField('Сияние', default=True)
 
     def __str__(self):
         return self.title
@@ -32,7 +45,7 @@ class StarmapOrderModel(models.Model):
     additional_information = models.TextField('Дополнительная информация', blank=True)
     is_logo = models.BooleanField('Логотип', default=True)
     starmap_type = models.ForeignKey(StarmapModel, on_delete=models.PROTECT, verbose_name='Тип звездной карты')
-    starmap_image = models.FileField('Звездная карта', upload_to=utils.get_starmap_image_upload_path_by_id)
+    starmap_size = models.ForeignKey(StarmapSizeModel, on_delete=models.PROTECT, verbose_name='Размер звездной карты')
     created_datetime = models.DateTimeField('Дата и время создания заказа', auto_now_add=True)
     changed_datetime = models.DateTimeField('Дата и время изменения заказа', auto_now=True)
 
