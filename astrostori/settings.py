@@ -3,25 +3,20 @@ import toml
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CONFIG_FILE = 'config.toml'
 CONFIG_FILE_DIR = os.path.join(BASE_DIR, CONFIG_FILE)
 CONFIG_DATA = toml.load(CONFIG_FILE_DIR)
 
-# Quick-start development settings - unsuitable for production
-
 # SECURITY WARNING: keep the secret key used in production secret!
-
 SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-
 DEBUG = CONFIG_DATA['settings']['DEBUG']
 ALLOWED_HOSTS = CONFIG_DATA['settings']['ALLOWED_HOSTS']
 
-# Application definition
 
+# Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -96,7 +91,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'ru'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
 
@@ -116,7 +111,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 REDIS_HOST = os.environ['REDIS_HOST']
 REDIS_PORT = os.environ['REDIS_PORT']
 CELERY_BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
-
 
 # SMTP
 EMAIL_HOST = CONFIG_DATA['smtp']['EMAIL_HOST']

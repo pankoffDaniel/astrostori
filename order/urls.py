@@ -1,9 +1,9 @@
 from django.urls import path
 
-from .views import form, get_order
+from .views import form, get_starmap_order
 
 
 urlpatterns = [
     path('', form, name='order'),
-    path('get-order/', get_order, name='get_order'),
+    path('get-starmap-order/', get_starmap_order, name='get_starmap_order'),
 ]

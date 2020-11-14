@@ -1,7 +1,7 @@
 import traceback
 
 from django.conf import settings
-from django.http import HttpResponseBadRequest, HttpResponse, JsonResponse
+from django.http import HttpResponseBadRequest, HttpResponse, JsonResponse, HttpResponseServerError
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 
@@ -23,7 +23,7 @@ def error_response(exception):
     logger.trace(response['traceback'])
     if settings.DEBUG:
         return json_response(response, status=500)
-    return HttpResponseBadRequest('500 Server Error')
+    return HttpResponseServerError('500 Server Error')
 
 
 def base_view(view):
@@ -42,8 +42,9 @@ def form(request):
 
 @csrf_exempt
 @base_view
-def get_order(request):
+def get_starmap_order(request):
+    """Вьюшка для обработки получения заказа звездной карты из формы."""
     if request.method != 'POST':
         return HttpResponseBadRequest('400 Bad Request')
     services.save_starmap(request.POST)
-    return HttpResponse('200 OK')
+    return HttpResponse('200 OK', status=200)

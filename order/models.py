@@ -1,18 +1,21 @@
+from django.core.exceptions import ValidationError
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
 from src import utils
+from src.api import get_coordinates
 
 
 class StarmapSizeModel(models.Model):
-    """Модель размера звездной карты в формате 30x50 (ширина|высота)."""
+    """Модель размера звездной карты в формате 30x50 (ширина и высота)."""
     size = models.CharField('Размер звездной карты', max_length=255)
 
     def __str__(self):
         return self.size
 
     class Meta:
-        verbose_name = 'Размер звездной карты'
-        verbose_name_plural = 'Размер звездных карт'
+        verbose_name = 'Размер'
+        verbose_name_plural = 'Размеры'
 
 
 class StarmapModel(models.Model):
@@ -25,8 +28,8 @@ class StarmapModel(models.Model):
         return self.title
 
     class Meta:
-        verbose_name = 'Каталог звездных карт'
-        verbose_name_plural = 'Каталог звездных карт'
+        verbose_name = 'Тип'
+        verbose_name_plural = 'Типы'
 
 
 class StarmapOrderModel(models.Model):
@@ -42,6 +45,12 @@ class StarmapOrderModel(models.Model):
     country = models.CharField('Страна', max_length=255)
     city = models.CharField('Город', max_length=255)
     text = models.CharField('Текст', max_length=50)
+    latitude = models.FloatField('Широта', blank=True, null=True,
+                                 validators=[MinValueValidator(-90), MaxValueValidator(90)],
+                                 help_text='Если вводите широту, то и долготу тоже. Пример: 55.75697')
+    longitude = models.FloatField('Долгота', blank=True, null=True,
+                                  validators=[MinValueValidator(-180), MaxValueValidator(180)],
+                                  help_text='Если вводите долготу, то и ширину тоже. Пример: 37.61502')
     additional_information = models.TextField('Дополнительная информация', blank=True)
     is_logo = models.BooleanField('Логотип', default=True)
     starmap_type = models.ForeignKey(StarmapModel, on_delete=models.PROTECT, verbose_name='Тип звездной карты')
@@ -50,8 +59,8 @@ class StarmapOrderModel(models.Model):
     changed_datetime = models.DateTimeField('Дата и время изменения заказа', auto_now=True)
 
     def __str__(self):
-        return str(self.id)
+        return f'Клиентский заказ №{str(self.id)}'
 
     class Meta:
-        verbose_name = 'Заказ звездной карты'
-        verbose_name_plural = 'Заказы звездных карт'
+        verbose_name = 'Заказ'
+        verbose_name_plural = 'Заказы'

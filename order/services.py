@@ -12,6 +12,7 @@ from src.utils import get_correct_date, load_config_file
 
 
 def save_starmap(request: object):
+    """Сохраняет звездную карту."""
     # TODO: принимать верные данные и правильно логгировать
     config_data = load_config_file()
     try:
@@ -31,7 +32,7 @@ def save_starmap(request: object):
     year, month, day = get_correct_date(str(date), separate='-')
     additional_info = request.get('additional_info')
     set_logo = request.get('set_logo')
-    latitude = request.get('altitude')
+    latitude = request.get('latitude')
     longitude = request.get('longitude')
 
     country = request.get('country')
@@ -51,7 +52,7 @@ def save_starmap(request: object):
     if not date or not country or not city:
         return HttpResponseBadRequest('400 Bad Request')
 
-    if not latitude or not longitude:
+    if latitude is None or longitude is None:
         coordinates = get_coordinates(geocode_api_url, params)
         latitude = coordinates.get('Latitude')
         longitude = coordinates.get('Longitude')
@@ -63,5 +64,6 @@ def save_starmap(request: object):
 
     logger.trace(f'{starmap_url} | logo - {set_logo} | description - {additional_info}', )
     if timezone:
-        get_starmap_task.delay(starmap_url, starmap_shade_galaxy, hours, minutes, width, height, angle, starmap_filename,
+        get_starmap_task.delay(starmap_url, starmap_shade_galaxy, starmap_filename,
+                               hours, minutes, width, height, angle,
                                client_order_id=str(request.get('id')), force_download=True)

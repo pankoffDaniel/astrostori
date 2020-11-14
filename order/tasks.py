@@ -9,8 +9,9 @@ from src.utils import rotate_svg_image, delete_file_list
 
 
 @app.task()
-def get_starmap_task(starmap_url: str, starmap_shade_galaxy: bool, hours: str, minutes: str, width: str, height: str, angle: str,
-                     starmap_filename: str, client_order_id: str, force_download=False):
+def get_starmap_task(starmap_url: str, starmap_shade_galaxy: bool, starmap_filename: str,
+                     hours: str, minutes: str, width: str, height: str, angle: str,
+                     client_order_id: str, force_download=False):
     """Ассинхронное выполнение для получения звездной карты и поворота на 180 градусов."""
     image_directory = os.path.join(settings.BASE_DIR, 'media', 'clients', client_order_id)
     driver = get_driver(image_directory)

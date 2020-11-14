@@ -53,8 +53,12 @@ def download_starmap(driver: object, url: str, starmap_shade_galaxy: bool, hours
         'hide_constellations_names': driver.find_element_by_css_selector('.chkcn'),
         'hide_daylight': driver.find_element_by_css_selector('.chkdaylig'),
         'show_shade_galaxy': driver.find_element_by_css_selector('.chkgalash') if starmap_shade_galaxy else None,
+        #'show_sidebar': driver.find_element_by_css_selector('.toggle_show_panel'),
     }
     click_chosen_object_dict(driver, object_dict)
+
+    show_sidebar = driver.find_element_by_css_selector('.toggle_show_panel')
+    driver.execute_script("arguments[0].click();", show_sidebar)
 
     stars_option = Select(driver.find_element_by_name('PLlimitmag'))
     stars_option.select_by_visible_text('Faint')
