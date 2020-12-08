@@ -10,6 +10,19 @@
 {#<form action="{% url 'get_order' %}" method="post" target="my_iframe">#}
 <form action="{% url 'get_starmap_order' %}" method="post">
 {#<form action="http://45.156.26.96:8080/get-starmap/" method="post" name="myForm" id="myForm">#}
+    <label for="name">Имя</label>
+    <input type="text" name="name" id="name" required>
+    <br>
+    <label for="email">Email</label>
+    <input type="email" name="email" id="email" required>
+    <br>
+    <label for="address">Адресс</label>
+    <input type="text" name="address" id="address" required>
+    <br>
+    <label for="phone_number">Номер телефона</label>
+    <input type="text" name="phone_number" id="phone_number" required>
+    <br>
+
     <label for="date">Дата</label>
     <input type="date" name="date" id="date" required>
     <br>
@@ -19,15 +32,21 @@
     <label for="city">Город</label>
     <input type="text" name="city" id="city" required>
     <br>
-    <label for="additional_info">Дополнительная информация</label>
+    <label for="text">Текст</label>
+    <input type="text" name="text" id="text" required>
     <br>
-    <textarea name="additional_info" id="additional_info" cols="30" rows="10"></textarea>
+    <label for="additional_information">Дополнительная информация</label>
     <br>
-    <label for="set_logo">Установить логотип astrostori?</label>
-    <input type="checkbox" name="set_logo" id="set_logo">
+    <textarea name="additional_information" id="additional_information" cols="30" rows="10"></textarea>
     <br>
-    <label for="agreement">Соглашаюсь на сохранение данных</label>
-    <input type="checkbox" name="agreement" id="agreement" required>
+    <label for="is_logo">Установить логотип astrostori?</label>
+    <input type="checkbox" name="is_logo" id="is_logo">
+    <br>
+    <label for="starmap_type_id">Тип карты ID</label>
+    <input type="text" name="starmap_type_id" id="starmap_type_id">
+    <br>
+    <label for="starmap_size_id">Размер карты ID</label>
+    <input type="text" name="starmap_size_id" id="starmap_size_id">
     <br>
     <input type="submit" value="Скачать">
 </form>

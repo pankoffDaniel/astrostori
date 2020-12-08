@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.utils.safestring import mark_safe
 
 from src.utils import load_config_file
-from .models import StarmapModel, StarmapOrderModel, StarmapSizeModel
+from .models import StarmapOrderModel, StarmapTypeModel, StarmapSizeModel
 
 
 @admin.register(StarmapSizeModel)
@@ -14,9 +14,9 @@ class StarmapSizeAdmin(admin.ModelAdmin):
     list_display_links = ('id', 'size')
 
 
-@admin.register(StarmapModel)
-class StarmapAdmin(admin.ModelAdmin):
-    """Шаблон заказа звездной карты в админке."""
+@admin.register(StarmapTypeModel)
+class StarmapTypeAdmin(admin.ModelAdmin):
+    """Шаблон типа звездной карты в админке."""
     list_display = ('id', 'title', 'get_image', 'shade_galaxy')
     list_display_links = ('id', 'title')
     readonly_fields = ('get_image',)

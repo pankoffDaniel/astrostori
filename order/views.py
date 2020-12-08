@@ -46,5 +46,5 @@ def get_starmap_order(request):
     """Вьюшка для обработки получения заказа звездной карты из формы."""
     if request.method != 'POST':
         return HttpResponseBadRequest('400 Bad Request')
-    services.save_starmap(request.POST)
+    services.create_order(request.POST)
     return HttpResponse('200 OK', status=200)

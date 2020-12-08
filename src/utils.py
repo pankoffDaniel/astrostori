@@ -1,6 +1,6 @@
 import os
-
 import toml
+
 from django.conf import settings
 
 
@@ -17,6 +17,7 @@ def get_correct_date(date: str, separate: str) -> tuple:
 
 def rotate_svg_image(image_path: str, angle: str):
     """Поворачивает SVG изображение на угол angle и очищает от надписи."""
+    # TODO: ужасный метод (надо бы удалить)
     with open(image_path, 'r') as image:
         html = image.read()
         html = html.replace('<svg ', f'<svg style="transform: rotate({angle}deg);" ')
@@ -39,10 +40,11 @@ def get_starmap_image_upload_path_in_catalog(instance: object, filename: str) ->
 
 
 def load_config_file():
+    """Загружает конфигурационный файл."""
     try:
         config_data = toml.load(settings.CONFIG_FILE_DIR)
         return config_data
     except FileNotFoundError:
-        raise Exception(
+        raise FileNotFoundError(
             f'Конфигурационный файл {settings.CONFIG_FILE} не найден.'
             f'Файл должен находиться по пути {settings.BASE_DIR}/{settings.CONFIG_FILE}')
