@@ -8,7 +8,7 @@ from src.api import get_coordinates, get_timezone
 from src.utils import get_correct_date
 
 
-def save_starmap(request: object):
+def save_starmap(request):
     """Сохраняет звездную карту."""
     date = request.get('date')
     year, month, day = get_correct_date(str(date), separate='-')
@@ -47,12 +47,11 @@ def save_starmap(request: object):
     logger.trace(f'id - {client_order_id} | {starmap_url} | logo - {is_logo} | description - {additional_information}')
 
     if timezone:
-        # TODO: забыл что хотел сделать
         get_starmap_task.delay(starmap_url, starmap_shade_galaxy,
                                client_order_id=str(client_order_id), force_download=True)
 
 
-def create_order(request: object):
+def create_order(request):
     """Создает заказ звездной карты (вызывается из вьюшки)."""
     name = request.get('name')
     email = request.get('email')

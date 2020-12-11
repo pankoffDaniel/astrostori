@@ -11,7 +11,8 @@ ANGLE="180"
 STARMAP_FILENAME="sky_view.svg"
 
 [smtp]
-EMAIL_HOST="smtp.yandex.ru"
+#EMAIL_HOST="smtp.yandex.ru"
+EMAIL_HOST="smtp-fra1t.alwaysdata.net"
 EMAIL_PORT="465"
 EMAIL_USE_TLS=false
 EMAIL_USE_SSL=true

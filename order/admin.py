@@ -27,28 +27,21 @@ class StarmapTypeAdmin(admin.ModelAdmin):
                              f'<img src="{obj.image.url}" width="100">'
                              f'</a>')
         return 'Нет изображения'
-
-    def has_delete_permission(self, request, obj=None):
-        """Право на удаление есть только у супер-пользователя."""
-        if request.user.is_superuser:
-            return True
-        return False
-
     get_image.short_description = 'Миниатюра'
 
 
 @admin.register(StarmapOrderModel)
 class StarmapOrderAdmin(admin.ModelAdmin):
     """Заказ звездной карты в админке."""
-    list_display = ('id', 'name', 'email', 'phone_number', 'date', 'is_image')
-    list_display_links = ('id', 'name', 'email', 'phone_number', 'date')
+    list_display = ('id', 'name', 'email', 'phone_number', 'date', 'status', 'is_image')
+    list_display_links = ('id', 'name', 'email', 'phone_number', 'date', 'status')
     readonly_fields = ('created_datetime', 'changed_datetime', 'get_image')
     save_as = True
     save_on_top = True
     fieldsets = (
         ('Персональные данные', {
             'fields': (
-                'name', 'email', 'phone_number', 'address', 'additional_information',
+                'name', 'email', 'phone_number', 'address', 'client_type', 'additional_information',
             )
         }),
         ('Данные заказа', {
@@ -57,17 +50,11 @@ class StarmapOrderAdmin(admin.ModelAdmin):
                 'latitude', 'longitude',
                 'date', 'text',
                 ('starmap_type', 'starmap_size'),
-                'is_logo', 'created_datetime', 'changed_datetime',
+                'is_logo', 'status', 'created_datetime', 'changed_datetime',
                 'get_image',
             )
         }),
     )
-
-    def has_delete_permission(self, request, obj=None):
-        """Право на удаление есть только у супер-пользователя."""
-        if request.user.is_superuser:
-            return True
-        return False
 
     def is_image(self, obj):
         """Возвращает есть ли карта в каталоге или нет."""
@@ -75,8 +62,8 @@ class StarmapOrderAdmin(admin.ModelAdmin):
         starmap_filename = config_data['starmap']['STARMAP_FILENAME']
         starmap_directory = os.path.join('media', 'clients', str(obj.id))
         if not os.path.exists(starmap_directory) or starmap_filename not in os.listdir(starmap_directory):
-            return '-'
-        return '+'
+            return mark_safe('<img src="/static/admin/img/icon-no.svg" alt="False">')
+        return mark_safe('<img src="/static/admin/img/icon-yes.svg" alt="True">')
 
     def get_image(self, obj):
         """Отображение миниатюры полученной зездной карты."""
@@ -91,8 +78,8 @@ class StarmapOrderAdmin(admin.ModelAdmin):
             f'<img src="{starmap_filepath}" width="100" height="100">'
             f'</a>')
 
+    is_image.short_description = 'Карта загружена'
     get_image.short_description = 'Изображение'
-    is_image.short_description = 'Есть изображение'
 
 
 # Настройка названия админки сайта

@@ -2,11 +2,11 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
+from settings.models import OrderStatusModel, OrderClientTypeModel, DefaultSettingsModel
+from settings.services import get_default_client_type, get_default_order_status
 from src import utils
 from src.api import get_coordinates
 
-
-# TODO: статусы заказов (автоматические, если карта скачалась или нет и ручные, когда заказ в обработке/исполнен и т.д.)
 
 class StarmapSizeModel(models.Model):
     """Модель размера звездной карты."""
@@ -41,6 +41,8 @@ class StarmapOrderModel(models.Model):
     email = models.EmailField('Email')
     address = models.CharField('Адресс', max_length=255)
     phone_number = models.CharField('Номер телефона', max_length=255)
+    client_type = models.ForeignKey(OrderClientTypeModel, on_delete=models.PROTECT, verbose_name='Тип клиента',
+                                    default=get_default_client_type)
 
     # Заказ
     date = models.DateField('Дата')
@@ -57,33 +59,39 @@ class StarmapOrderModel(models.Model):
     is_logo = models.BooleanField('Логотип', default=True)
     starmap_type = models.ForeignKey(StarmapTypeModel, on_delete=models.PROTECT, verbose_name='Тип звездной карты')
     starmap_size = models.ForeignKey(StarmapSizeModel, on_delete=models.PROTECT, verbose_name='Размер звездной карты')
+    status = models.ForeignKey(OrderStatusModel, on_delete=models.PROTECT, null=True, verbose_name='Статус',
+                               default=get_default_order_status)
     created_datetime = models.DateTimeField('Дата и время создания заказа', auto_now_add=True)
     changed_datetime = models.DateTimeField('Дата и время изменения заказа', auto_now=True)
 
     def __str__(self):
         return f'Клиентский заказ №{str(self.id)}'
 
-    def clean(self):
-        validation_error_dict = {}
-
+    def _validate_country_and_city(self):
         try:
             get_coordinates(self.country, self.city)
         except ValidationError:
             if StarmapOrderModel.objects.filter(pk=self.id).exists():
-                validation_error_dict['country'] = 'Координаты не найдены.'
-                validation_error_dict['city'] = 'Координаты не найдены.'
+                self.validation_error_dict['country'] = 'Координаты не найдены.'
+                self.validation_error_dict['city'] = 'Координаты не найдены.'
 
+    def _validate_coordinates(self):
         latitude = isinstance(self.latitude, float)
         longitude = isinstance(self.longitude, float)
-
         if not latitude or not longitude:
             if longitude and not latitude:
-                validation_error_dict['latitude'] = 'Введите ширину.'
+                self.validation_error_dict['latitude'] = 'Введите ширину.'
             if latitude and not longitude:
-                validation_error_dict['longitude'] = 'Введите долготу.'
+                self.validation_error_dict['longitude'] = 'Введите долготу.'
 
-        if validation_error_dict:
-            raise ValidationError(validation_error_dict)
+    def clean(self):
+        """Запускает дополнительные валидации полей страны, города, ширины и долготы."""
+        self.validation_error_dict = {}
+        if self.country and self.city:
+            self._validate_country_and_city()
+        self._validate_coordinates()
+        if self.validation_error_dict:
+            raise ValidationError(self.validation_error_dict)
 
     class Meta:
         verbose_name = 'Заказ'
