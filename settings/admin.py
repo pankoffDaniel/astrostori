@@ -13,8 +13,10 @@ class OrderClientTypeAdmin(admin.ModelAdmin):
 @admin.register(DefaultSettingsModel)
 class DefaultSettingsAdmin(admin.ModelAdmin):
     """Стандартные значения в админке."""
-    list_display = ('id', 'client_type', 'order_status')
-    list_display_links = ('id', 'client_type', 'order_status')
+    list_display = ('id', 'client_type', 'order_status',
+                    'starmap_time', 'starmap_width', 'starmap_height', 'starmap_angle')
+    list_display_links = ('id', 'client_type', 'order_status',
+                          'starmap_time', 'starmap_width', 'starmap_height', 'starmap_angle')
 
     def has_add_permission(self, request):
         """Можно добавить только одну запись."""
@@ -24,5 +26,5 @@ class DefaultSettingsAdmin(admin.ModelAdmin):
 @admin.register(OrderStatusModel)
 class OrderStatusAdmin(admin.ModelAdmin):
     """Статус заказа в админке."""
-    list_display = ('id', 'status')
-    list_display_links = ('id', 'status')
+    list_display = ('id', 'order_status')
+    list_display_links = ('id', 'order_status')

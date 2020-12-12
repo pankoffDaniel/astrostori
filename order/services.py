@@ -11,6 +11,8 @@ from src.utils import get_correct_date
 def save_starmap(request):
     """Сохраняет звездную карту."""
     date = request.get('date')
+    time = request.get('starmap_time')
+    hours, minutes, _ = str(time).split(':')
     year, month, day = get_correct_date(str(date), separate='-')
     additional_information = request.get('additional_information')
     is_logo = True if request.get('is_logo') == 'on' else False
@@ -44,11 +46,11 @@ def save_starmap(request):
 
     client_order_id = request.get('id')
     print('ID заказа:', client_order_id)
+    # TODO: сделать нормальные логи
     logger.trace(f'id - {client_order_id} | {starmap_url} | logo - {is_logo} | description - {additional_information}')
-
-    if timezone:
-        get_starmap_task.delay(starmap_url, starmap_shade_galaxy,
-                               client_order_id=str(client_order_id), force_download=True)
+    # TODO: карта скачивается вновь, даже если изменения заказа не касались ее координат
+    get_starmap_task.delay(starmap_url, starmap_shade_galaxy, hours, minutes,
+                           client_order_id=str(client_order_id), force_download=True)
 
 
 def create_order(request):

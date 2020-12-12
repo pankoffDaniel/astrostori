@@ -28,7 +28,7 @@ def get_coordinates(country: str, city: str) -> dict:
     return coordinates
 
 
-def get_timezone(latitude: str, longitude: str) -> str:
+def get_timezone(latitude, longitude) -> str:
     """Возвращает временную зону в формате GMT с учетом перевода времени.
     Ограничение - 20.000 запросов в день."""
     geonames_username = os.environ['GEONAMES_USERNAME']

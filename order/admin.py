@@ -33,8 +33,8 @@ class StarmapTypeAdmin(admin.ModelAdmin):
 @admin.register(StarmapOrderModel)
 class StarmapOrderAdmin(admin.ModelAdmin):
     """Заказ звездной карты в админке."""
-    list_display = ('id', 'name', 'email', 'phone_number', 'date', 'status', 'is_image')
-    list_display_links = ('id', 'name', 'email', 'phone_number', 'date', 'status')
+    list_display = ('id', 'name', 'email', 'phone_number', 'date', 'order_status', 'is_image')
+    list_display_links = ('id', 'name', 'email', 'phone_number', 'date', 'order_status')
     readonly_fields = ('created_datetime', 'changed_datetime', 'get_image')
     save_as = True
     save_on_top = True
@@ -48,9 +48,9 @@ class StarmapOrderAdmin(admin.ModelAdmin):
             'fields': (
                 'country', 'city',
                 'latitude', 'longitude',
-                'date', 'text',
-                ('starmap_type', 'starmap_size'),
-                'is_logo', 'status', 'created_datetime', 'changed_datetime',
+                'date', 'starmap_time', 'text',
+                'starmap_type', 'starmap_size',
+                'order_status',  'is_logo', 'created_datetime', 'changed_datetime',
                 'get_image',
             )
         }),
@@ -83,6 +83,5 @@ class StarmapOrderAdmin(admin.ModelAdmin):
 
 
 # Настройка названия админки сайта
-# TODO: каждая роль персонала отмечается цветом и настроить права доступа
 admin.site.site_header = 'ASTROSTORI'
 admin.site.site_title = 'ASTROSTORI'

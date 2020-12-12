@@ -3,10 +3,10 @@ from django.db import models
 
 class OrderStatusModel(models.Model):
     """Модель статуса заказа."""
-    status = models.CharField('Статус заказа', max_length=255, unique=True)
+    order_status = models.CharField('Статус заказа', max_length=255, unique=True)
 
     def __str__(self):
-        return self.status
+        return self.order_status
 
     class Meta:
         verbose_name = 'Статус заказа'
@@ -31,6 +31,10 @@ class DefaultSettingsModel(models.Model):
                                     verbose_name='Стандартный тип клиента')
     order_status = models.ForeignKey(OrderStatusModel, on_delete=models.PROTECT,
                                      verbose_name='Стандартный статус заказа')
+    starmap_time = models.TimeField('Время звездного неба', help_text='Вводить в формате 18:20')
+    starmap_width = models.PositiveSmallIntegerField('Ширина звездной карты', help_text='В пикселях')
+    starmap_height = models.PositiveSmallIntegerField('Высота звездной карты', help_text='В пикселях')
+    starmap_angle = models.PositiveSmallIntegerField('Угол поворота звездной карты', help_text='В градусах')
 
     def __str__(self):
         return 'Настройки'

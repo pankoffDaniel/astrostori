@@ -4,24 +4,23 @@ from django.conf import settings
 from django.core.mail import send_mail
 
 from astrostori.celery import app
+from settings.models import DefaultSettingsModel
 from src.selenium import download_starmap, get_driver
 from src.utils import delete_file_list, load_config_file, rotate_svg_image
 
 
 @app.task()
-def get_starmap_task(starmap_url: str, starmap_shade_galaxy: bool, client_order_id: str, force_download=False):
+def get_starmap_task(starmap_url: str, starmap_shade_galaxy: bool, hours: str, minutes: str,
+                     client_order_id: str, force_download=False):
     """Ассинхронное выполнение для получения звездной карты и поворота на 180 градусов."""
     config_data = load_config_file()
     try:
-        hours = config_data['starmap']['HOURS']
-        minutes = config_data['starmap']['MINUTES']
-        width = config_data['starmap']['WIDTH']
-        height = config_data['starmap']['HEIGHT']
-        angle = config_data['starmap']['ANGLE']
         starmap_filename = config_data['starmap']['STARMAP_FILENAME']
     except KeyError:
         raise Exception(f'Конфигурационный файл {settings.CONFIG_FILE} не корректно настроен.')
-
+    width = DefaultSettingsModel.objects.first().starmap_width
+    height = DefaultSettingsModel.objects.first().starmap_height
+    angle = DefaultSettingsModel.objects.first().starmap_angle
     image_directory = os.path.join(settings.BASE_DIR, 'media', 'clients', client_order_id)
     driver = get_driver(image_directory)
     os.makedirs(image_directory, exist_ok=True)
@@ -42,10 +41,10 @@ def get_starmap_task(starmap_url: str, starmap_shade_galaxy: bool, client_order_
         rotate_svg_image(image_path, angle)
 
 
-@app.task(bind=True)
-def send_mail_task(self, subject, message, send_from, email_list, countdown, max_retries):
-    """Отправляет письма списку email почт."""
-    try:
-        send_mail(subject, message, send_from, email_list, fail_silently=True)
-    except Exception as exception:
-        self.retry(exc=exception, countdown=countdown, max_retries=max_retries)
+# @app.task(bind=True)
+# def send_mail_task(self, subject, message, send_from, email_list, countdown, max_retries):
+#     """Отправляет письма списку email почт."""
+#     try:
+#         send_mail(subject, message, send_from, email_list, fail_silently=True)
+#     except Exception as exception:
+#         self.retry(exc=exception, countdown=countdown, max_retries=max_retries)
